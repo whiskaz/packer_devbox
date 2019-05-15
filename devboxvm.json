@@ -4,10 +4,10 @@
   "builders": [
     {
       "type": "virtualbox-ovf",
-	  "source_path": "output-virtualbox-iso/titanbox_base.ovf",
+	  "source_path": "output-virtualbox-iso/devbox_base.ovf",
 	  "checksum_type": "none",
 	  "headless": true,
-      "vm_name": "titanbox",
+      "vm_name": "devbox",
       "ssh_username": "root",
       "ssh_password": "12345678",
       "ssh_port": 22,
