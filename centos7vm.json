@@ -1,0 +1,43 @@
+{
+  "variables": {
+    "iso": "CentOS-7-x86_64-DVD-1810.iso",
+    "checksum": "5b61d5b378502e9cba8ba26b6696c92a",
+    "profiledir": "{{env `userprofile`}}"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+	  "headless": true,
+      "iso_url": "{{ user `iso` }}",
+      "iso_checksum": "{{ user `checksum` }}",
+      "iso_checksum_type": "md5",
+      "vm_name": "titanbox_base",
+      "guest_os_type": "RedHat_64",
+      "ssh_username": "root",
+      "ssh_password": "12345678",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "30m",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--memory", "16384"],
+        ["modifyvm", "{{.Name}}", "--cpus", "2"],
+        ["modifyvm", "{{.Name}}", "--audio", "none"],
+		["modifyvm", "{{.Name}}", "--natpf1", "guestssh,tcp,,2222,,22"],
+		["modifyvm", "{{.Name}}", "--natpf1", "oracledb,tcp,,1521,,1521"],
+		["sharedfolder", "add", "{{.Name}}", "--name", "home", "--hostpath", "{{ user `profiledir` }}"]
+      ],
+	  "guest_additions_mode": "upload",
+      "disk_size": "51200",
+      "http_directory": "http",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "shutdown_command": "/sbin/halt -p"
+    }
+  ],
+  "provisioners": [
+	{
+		"type": "shell",
+		"script": "provisioners/install-virtualbox-guest-additions.sh"
+	}		
+  ]
+}

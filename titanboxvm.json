@@ -1,0 +1,28 @@
+{
+  "variables": {
+  },
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+	  "source_path": "output-virtualbox-iso/titanbox_base.ovf",
+	  "checksum_type": "none",
+	  "headless": true,
+      "vm_name": "titanbox",
+      "ssh_username": "root",
+      "ssh_password": "12345678",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "30m",	  
+      "shutdown_command": "/sbin/halt -p"
+    }
+  ],
+  "provisioners": [
+	{
+		"type": "shell",
+		"script": "provisioners/setup-fstab.sh"
+	},
+	{
+		"type": "shell",
+		"script": "provisioners/install-deps.sh"
+	}		
+  ]
+}
